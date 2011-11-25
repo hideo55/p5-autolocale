@@ -1,17 +1,19 @@
 package autolocale;
 use strict;
 use warnings;
-use POSIX qw(setlocale LC_ALL LC_CTYPE);
+use POSIX qw(setlocale LC_ALL);
 use Variable::Magic qw(wizard cast dispell);
 
 our $VERSION = '0.01';
 
-my $PACKAGE       = __PACKAGE__;
-my $PACKAGE_GUARD = "guard $PACKAGE";
-my $NO_PACKAGE    = "no $PACKAGE";      # Used to detect 'no autodie'
+my $is_enable = sub {
+    my $level = shift || 0;
+    my $hinthash = ( caller($level) )[10];
+    return $hinthash->{autolocale};
+};
 
 my $handler = sub {
-    return unless in_effect(1);
+    return unless $is_enable->(1);
     my $arg = shift;
     if ( ref $arg ne 'SCALAR' ) {
         die q{You must store scalar data in $ENV{"LANG"}};
@@ -32,12 +34,6 @@ sub import {
 sub unimport {
     shift;
     $^H{autolocale} = 0;
-}
-
-sub in_effect {
-    my $level = shift || 0;
-    my $hinthash = ( caller($level) )[10];
-    return $hinthash->{autolocale};
 }
 
 1;
