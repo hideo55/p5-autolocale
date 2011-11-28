@@ -2,28 +2,64 @@ package autolocale;
 use strict;
 use warnings;
 use 5.010;
-use POSIX qw(setlocale LC_ALL);
+use POSIX qw(setlocale LC_ALL LC_CTYPE LC_COLLATE LC_NUMERIC);
 use Variable::Magic qw(wizard cast dispell);
 
 our $VERSION = '0.01';
 
-my $handler = sub {
-    my $hinthash = ( caller(0) )[10];
+my $get_value = sub {
+    my $hinthash = ( caller(1) )[10];
     return unless $hinthash->{"autolocale"};
     my $arg = shift;
     if ( ref $arg ne 'SCALAR' ) {
-        die q{You must store scalar data in $ENV{"LANG"}};
+        die q{You must store scalar data to %ENV};
     }
     my $locale = ${$arg};
-    setlocale( LC_ALL, $locale );
-    return;
+    return $locale;
 };
 
-my $wiz = wizard( set => $handler, );
+my $lang = wizard(
+    set => sub {
+        my $locale = $get_value->(@_);
+        return unless $locale;
+        setlocale( LC_ALL, $locale );
+        return;
+    }
+);
+
+my $ctype = wizard(
+    set => sub {
+        my $locale = $get_value->(@_);
+        return unless $locale;
+        setlocale( LC_CTYPE, $locale );
+        return;
+    }
+);
+
+my $collate = wizard(
+    set => sub {
+        my $locale = $get_value->(@_);
+        return unless $locale;
+        setlocale( LC_COLLATE, $locale );
+        return;
+    }
+);
+
+my $numeric = wizard(
+    set => sub {
+        my $locale = $get_value->(@_);
+        return unless $locale;
+        setlocale( LC_NUMERIC, $locale );
+        return;
+    }
+);
 
 sub import {
     $^H{"autolocale"} = 1;
-    cast $ENV{"LANG"}, $wiz;
+    cast $ENV{"LANG"},       $lang;
+    cast $ENV{"LC_CTYPE"},   $ctype;
+    cast $ENV{"LC_COLLATE"}, $collate;
+    cast $ENV{"LC_NUMERIC"}, $numeric;
 }
 
 sub unimport {
@@ -35,7 +71,7 @@ __END__
 
 =head1 NAME
 
-autolocale - auto call setlocale when set $ENV{"LANG"}
+autolocale - auto call setlocale when set %ENV
 
 =head1 SYNOPSIS
 
@@ -45,7 +81,7 @@ autolocale - auto call setlocale when set $ENV{"LANG"}
 
 =head1 DESCRIPTION
 
-autolocale is pragma moudle that auto call setlocale when set $ENV{"LANG"}.
+autolocale is pragma moudle that auto call setlocale when set $ENV{"LANG"}, $ENV{"LC_CTYPE"}, $ENV{"LC_COLLATE"}, and $ENV{"LC_NUMERIC"}.
 
 =head1 AUTHOR
 
