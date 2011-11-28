@@ -1,11 +1,11 @@
 use strict;
 use Test::More;
-use autolocale;
+use Test::Fatal;
 use POSIX qw(LC_ALL setlocale);
 
-$ENV{LANG} = "C";
-
-subtest "pragma" => sub {
+subtest "basic usage" => sub {
+    use autolocale;
+    $ENV{LANG} = "C";
     my $loc = setlocale(LC_ALL);
     is $loc, "C", 'autolocale enable';
     {
@@ -28,6 +28,13 @@ subtest "pragma" => sub {
     $ENV{LANG} = "C";
     $loc = setlocale(LC_ALL);
     is $loc, "en_US", 'out of lexical pragma';
+};
+
+subtest "Illegal usage" => sub {
+    use autolocale;
+    like exception {
+        $ENV{"LANG"} = [];
+    }, qr/^You must store scalar data in \$ENV{"LANG"}/;
 };
 
 done_testing();
