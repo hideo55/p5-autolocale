@@ -1,19 +1,15 @@
 package autolocale;
 use strict;
 use warnings;
+use 5.010;
 use POSIX qw(setlocale LC_ALL);
 use Variable::Magic qw(wizard cast dispell);
 
 our $VERSION = '0.01';
 
-my $is_enable = sub {
-    my $level = shift || 0;
-    my $hinthash = ( caller($level) )[10];
-    return $hinthash->{autolocale};
-};
-
 my $handler = sub {
-    return unless $is_enable->(1);
+    my $hinthash = ( caller(0) )[10];
+    return unless $hinthash->{"autolocale"};
     my $arg = shift;
     if ( ref $arg ne 'SCALAR' ) {
         die q{You must store scalar data in $ENV{"LANG"}};
@@ -26,14 +22,12 @@ my $handler = sub {
 my $wiz = wizard( set => $handler, );
 
 sub import {
-    shift;
-    $^H{autolocale} = 1;
+    $^H{"autolocale"} = 1;
     cast $ENV{"LANG"}, $wiz;
 }
 
 sub unimport {
-    shift;
-    $^H{autolocale} = 0;
+    $^H{"autolocale"} = 0;
 }
 
 1;
@@ -41,7 +35,7 @@ __END__
 
 =head1 NAME
 
-autolocale - auto call setlocale when set $ENV{LANG}
+autolocale - auto call setlocale when set $ENV{"LANG"}
 
 =head1 SYNOPSIS
 
@@ -51,7 +45,7 @@ autolocale - auto call setlocale when set $ENV{LANG}
 
 =head1 DESCRIPTION
 
-autolocale is pragma moudle that auto call setlocale when set $ENV{LANG}.
+autolocale is pragma moudle that auto call setlocale when set $ENV{"LANG"}.
 
 =head1 AUTHOR
 
