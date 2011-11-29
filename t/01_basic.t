@@ -1,9 +1,9 @@
 use strict;
 use Test::More;
 use Test::Fatal;
-use POSIX qw(setlocale LC_ALL LC_CTYPE LC_COLLATE LC_NUMERIC LC_MESSAGES);
+use POSIX qw(setlocale LC_ALL);
 
-subtest "LANG" => sub {
+subtest "Basic usage" => sub {
     use autolocale;
     $ENV{LANG} = "C";
     my $loc = setlocale(LC_ALL);
