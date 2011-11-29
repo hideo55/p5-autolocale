@@ -24,16 +24,15 @@ my $wiz = wizard(
 BEGIN {
     use strict;
     use warnings;
-    if (eval {
-            require Variable::Magic;
-            1;
-        }
-        )
+    if ( eval { require Variable::Magic; 1 } )
     {
+        # Can use Variable::Magic
         Variable::Magic->import(qw/wizard cast/);
     }
     else {
+        # Fallback Pure-Perl mode
         {
+
             package autolocale::Tie::Scalar;
             require Tie::Scalar;
             our @ISA = qw(Tie::StdScalar);
