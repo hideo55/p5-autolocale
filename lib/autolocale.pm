@@ -80,7 +80,7 @@ autolocale - auto call setlocale when set $ENV{"LANG"}
   }
   # locale is "C"
   
-  no autolocale; # auto setlocale disable
+  no autolocale; # auto setlocale disabled
   $ENV{"LANG"} = "en_US"; # locale is "C"
 
 =head1 DESCRIPTION
