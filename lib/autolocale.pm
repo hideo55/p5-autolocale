@@ -2,64 +2,63 @@ package autolocale;
 use strict;
 use warnings;
 use 5.010;
-use POSIX qw(setlocale LC_ALL LC_CTYPE LC_COLLATE LC_NUMERIC);
-use Variable::Magic qw(wizard cast dispell);
+use POSIX qw(setlocale LC_ALL);
 
 our $VERSION = '0.01';
 
-my $get_value = sub {
-    my $hinthash = ( caller(1) )[10];
-    return unless $hinthash->{"autolocale"};
-    my $arg = shift;
-    if ( ref $arg ne 'SCALAR' ) {
-        die q{You must store scalar data to %ENV};
-    }
-    my $locale = ${$arg};
-    return $locale;
-};
-
-my $lang = wizard(
+my $wiz = wizard(
     set => sub {
-        my $locale = $get_value->(@_);
+        my $hinthash = ( caller(0) )[10];
+        return unless $hinthash->{"autolocale"};
+        my $arg = shift;
+        if ( ref $arg ne 'SCALAR' ) {
+            die q{You must store scalar data to %ENV};
+        }
+        my $locale = ${$arg};
         return unless $locale;
         setlocale( LC_ALL, $locale );
         return;
     }
 );
 
-my $ctype = wizard(
-    set => sub {
-        my $locale = $get_value->(@_);
-        return unless $locale;
-        setlocale( LC_CTYPE, $locale );
-        return;
+BEGIN {
+    use strict;
+    use warnings;
+    if (eval {
+            require Variable::Magic;
+            1;
+        }
+        )
+    {
+        Variable::Magic->import(qw/wizard cast/);
     }
-);
+    else {
+        {
+            package autolocale::Tie::Scalar;
+            require Tie::Scalar;
+            our @ISA = qw(Tie::StdScalar);
 
-my $collate = wizard(
-    set => sub {
-        my $locale = $get_value->(@_);
-        return unless $locale;
-        setlocale( LC_COLLATE, $locale );
-        return;
+            sub STORE {
+                my ( $self, $value ) = @_;
+                ${$self} = $value;
+                @_ = ( \$value );
+                goto $wiz;
+            }
+        }
+        *wizard = sub {
+            my ( undef, $coderef ) = @_;
+            return $coderef;
+        };
+        *cast = sub (\$$) {
+            my ( $target, $handler ) = @_;
+            tie $$target, 'autolocale::Tie::Scalar';
+        };
     }
-);
-
-my $numeric = wizard(
-    set => sub {
-        my $locale = $get_value->(@_);
-        return unless $locale;
-        setlocale( LC_NUMERIC, $locale );
-        return;
-    }
-);
+}
 
 sub import {
     $^H{"autolocale"} = 1;
-    cast $ENV{"LANG"},       $lang;
-    cast $ENV{"LC_CTYPE"},   $ctype;
-    cast $ENV{"LC_COLLATE"}, $collate;
-    cast $ENV{"LC_NUMERIC"}, $numeric;
+    cast $ENV{"LANG"}, $wiz;
 }
 
 sub unimport {
