@@ -74,11 +74,14 @@ autolocale - auto call setlocale when set $ENV{"LANG"}
 
   use autolocale;
   
-  $ENV{"LANG"} = "C"; # locale is 'C'
+  $ENV{"LANG"} = "C"; # locale is "C"
   {
-      local $ENV{"LANG"} = "en_US";# locale is 'en_US'
+      local $ENV{"LANG"} = "en_US";# locale is "en_US"
   }
-  # locale is 'C'
+  # locale is "C"
+  
+  no autolocale; # auto setlocale disable
+  $ENV{"LANG"} = "en_US"; # locale is "C"
 
 =head1 DESCRIPTION
 
