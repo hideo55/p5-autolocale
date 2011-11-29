@@ -41,14 +41,14 @@ BEGIN {
                 goto $wiz;
             }
         }
-        
+
         *wizard = sub {
-            my ( undef, $coderef ) = @_;
-            return $coderef;
+            my ( undef, $handler ) = @_;
+            return $handler;
         };
-        
+
         *cast = sub (\$$) {
-            my ( $target, $handler ) = @_;
+            my $target = shift;
             tie $$target, 'autolocale::Tie::Scalar';
         };
     }
