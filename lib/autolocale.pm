@@ -70,17 +70,21 @@ __END__
 
 =head1 NAME
 
-autolocale - auto call setlocale when set %ENV
+autolocale - auto call setlocale when set $ENV{"LANG"}
 
 =head1 SYNOPSIS
 
   use autolocale;
   
-  $ENV{LANG} = "C";# auto call setlocale(LC_ALL, "C");
+  $ENV{"LANG"} = "C"; # locale is 'C'
+  {
+      local $ENV{"LANG"} = "en_US";# locale is 'en_US'
+  }
+  # locale is 'C'
 
 =head1 DESCRIPTION
 
-autolocale is pragma moudle that auto call setlocale when set $ENV{"LANG"}, $ENV{"LC_CTYPE"}, $ENV{"LC_COLLATE"}, and $ENV{"LC_NUMERIC"}.
+autolocale is pragma moudle that auto call setlocale when set $ENV{"LANG"}.
 
 =head1 AUTHOR
 
