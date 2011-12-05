@@ -4,7 +4,7 @@ use warnings;
 use 5.010;
 use POSIX qw(setlocale LC_ALL);
 
-our $VERSION = '0.01';
+our $VERSION = '0.02';
 
 my $wiz = wizard(
     set => sub {
