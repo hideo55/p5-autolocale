@@ -30,7 +30,8 @@ BEGIN {
     else {
         # Fallback Pure-Perl mode when can't use Variable::Magic
         {
-            package autolocale::Tie::Scalar;
+            package # Hiding package
+            autolocale::Tie::Scalar;
             require Tie::Scalar;
             our @ISA = qw(Tie::StdScalar);
 
