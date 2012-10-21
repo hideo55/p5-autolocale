@@ -1,27 +1,27 @@
-This is Perl module autolocale.
+NAME
+    autolocale - auto call setlocale when set $ENV{"LANG"}
 
-INSTALLATION
+SYNOPSIS
+      use autolocale;
+  
+      $ENV{"LANG"} = "C"; # locale is "C"
+      {
+          local $ENV{"LANG"} = "en_US";# locale is "en_US"
+      }
+      # locale is "C"
+  
+      no autolocale; # auto setlocale disabled
+      $ENV{"LANG"} = "en_US"; # locale is "C"
 
-autolocale installation is straightforward. If your CPAN shell is set up,
-you should just be able to do
+DESCRIPTION
+    autolocale is pragma moudle that auto call setlocale when set
+    $ENV{"LANG"}.
 
-    % cpan autolocale
+AUTHOR
+    Hideaki Ohno <hide.o.j55 {at} gmail.com>
 
-Download it, unpack it, then build it as per the usual:
+SEE ALSO
+LICENSE
+    This library is free software; you can redistribute it and/or modify it
+    under the same terms as Perl itself.
 
-    % perl Makefile.PL
-    % make && make test
-
-Then install it:
-
-    % make install
-
-DOCUMENTATION
-
-autolocale documentation is available as in POD. So you can do:
-
-    % perldoc autolocale
-
-to read the documentation online with your favorite pager.
-
-Hideaki Ohno

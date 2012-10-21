@@ -10,3 +10,10 @@ nytprof.out
 MANIFEST.bak
 *.sw[po]
 .project
+MYMETA.json
+MYMETA.yml
+.includepath
+cover_db
+META.json
+_build
+Build
