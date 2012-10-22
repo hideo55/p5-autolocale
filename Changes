@@ -1,5 +1,8 @@
 Revision history for Perl extension autolocale
 
+0.04    Tue Oct 23 03:25:00 2012
+        - Fixed broken tests
+
 0.03    Mon Oct 22 01:35:00 2012
         - Switch to Module::Build
 
