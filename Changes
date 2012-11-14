@@ -1,5 +1,8 @@
 Revision history for Perl extension autolocale
 
+0.05    Thu Nov 15 02:50:00 2012
+        - Fixed broken tests for several environments
+
 0.04    Tue Oct 23 03:25:00 2012
         - Fixed broken tests
 
