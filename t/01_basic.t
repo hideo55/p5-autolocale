@@ -5,7 +5,7 @@ use POSIX qw(setlocale LC_CTYPE);
 
 SKIP: {
     my $loc_orig = setlocale(LC_CTYPE);
-    if ( ( $loc_orig || q{} ) eq 'C' ) {
+    if ( !defined $loc_orig || $loc_orig eq 'C' ) {
         my $loc_us = setlocale( LC_CTYPE, 'en_US.UTF-8' );
         skip "Unspported locale(en_US.UTF-8)", 1 unless defined $loc_us;
         $loc_orig = $loc_us;
