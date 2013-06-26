@@ -1,5 +1,7 @@
 Revision history for Perl extension autolocale
 
+{{$NEXT}}
+
 0.05    Thu Nov 15 02:50:00 2012
         - Fixed broken tests for several environments
 

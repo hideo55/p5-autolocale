@@ -1,6 +1,16 @@
 language: perl
 perl:
+  - "5.18"
   - "5.16"
   - "5.14"
   - "5.12"
   - "5.10"
+env: RELEASE_TESTING=1 AUTOMATED_TESTING=1
+before_install:
+  - perlbrew -f install-cpanm
+  - cpanm -n Devel::Cover::Report::Coveralls
+install: cpanm -nq --installdeps --with-recommends --with-suggests .
+script: perl Build.PL && ./Build && ./Build testcover
+after_success:
+  - cover -report coveralls
+

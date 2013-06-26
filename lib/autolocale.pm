@@ -69,7 +69,7 @@ __END__
 
 =head1 NAME
 
-autolocale - auto call setlocale when set $ENV{"LANG"}
+autolocale - auto call setlocale() when set $ENV{"LANG"}
 
 =head1 SYNOPSIS
 
@@ -86,7 +86,7 @@ autolocale - auto call setlocale when set $ENV{"LANG"}
 
 =head1 DESCRIPTION
 
-autolocale is pragma moudle that auto call setlocale when set $ENV{"LANG"}.
+autolocale is pragma module that auto call setlocale() when set $ENV{"LANG"}.
 
 =head1 AUTHOR
 
